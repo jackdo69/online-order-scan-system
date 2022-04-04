@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "aws-cdk-lib": "^2.19.0",
+    "constructs": "^10.0.104"
+  }
 }
