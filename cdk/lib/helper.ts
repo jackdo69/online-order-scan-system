@@ -11,3 +11,7 @@ export const createLambda = (scope: Construct, fileName: string): NodejsFunction
   });
   return lambda;
 };
+
+export const getBranchName = (scope: Construct): string => {
+  return scope.node.tryGetContext("branchName") ?? "";
+};

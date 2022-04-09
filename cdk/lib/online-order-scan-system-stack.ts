@@ -1,16 +1,18 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
+import { Stack, StackProps } from "aws-cdk-lib";
+import { Construct } from "constructs";
+import { createLambda } from "./helper";
+import { ApiGateway } from "./ApiGateway";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class OnlineOrderScanSystemStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props);
+    super(scope, id, { ...props });
+    //Create lambdas
+    const health = createLambda(this, "health");
 
-    // The code that defines your stack goes here
+    //Create api gateway
+    const api = new ApiGateway(this, "apigateway");
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'OnlineOrderScanSystemQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    api.addIntegration("GET", "/health", health);
   }
 }
