@@ -6,6 +6,83 @@
 	},
 	"item": [
 		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const clientId = pm.environment.get(\"cognitoClientId\");",
+							"const username = pm.environment.get(\"cognitoUserName\");",
+							"const password = pm.environment.get(\"cognitoUserPassword\");",
+							"",
+							"const body = {",
+							"    \"AuthParameters\": {",
+							"        \"USERNAME\": username,",
+							"        \"PASSWORD\": password",
+							"    },",
+							"    \"AuthFlow\": \"USER_PASSWORD_AUTH\",",
+							"    \"ClientId\": clientId",
+							"}",
+							"pm.environment.set(\"requestBody\", JSON.stringify(body));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"cognitoIdToken\", pm.response.json().AuthenticationResult.IdToken);",
+							"pm.environment.set(\"cognitoAccessToken\", pm.response.json().AuthenticationResult.AccessToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Amz-Target",
+						"value": "AWSCognitoIdentityProviderService.InitiateAuth",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-amz-json-1.1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{requestBody}}",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cognito-idp.ap-southeast-2.amazonaws.com/",
+					"protocol": "https",
+					"host": [
+						"cognito-idp",
+						"ap-southeast-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Health",
 			"request": {
 				"method": "GET",
@@ -70,38 +147,7 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"var clientId = pm.environment.get(\"cognitoClientId\");",
-					"var clientSecret = pm.environment.get(\"cognitoClientSecret\");",
-					"var username = pm.environment.get(\"cognitoUserName\");",
-					"var password = pm.environment.get(\"cognitoUserPassword\");",
-					"pm.sendRequest({",
-					"           url: \"https://cognito-idp.ap-southeast-2.amazonaws.com/\",",
-					"           method: 'POST',",
-					"           header: {",
-					"                    'X-Amz-Target':   'AWSCognitoIdentityProviderService.InitiateAuth',",
-					"                    'Content-Type': 'application/x-amz-json-1.1'",
-					"                   },",
-					"            body: {",
-					"                   mode: 'raw',",
-					"                   raw: JSON.stringify({",
-					"                   \"AuthParameters\": {",
-					"                   \"USERNAME\": username,",
-					"                   \"PASSWORD\": password",
-					"                   },",
-					"                  \"AuthFlow\": \"USER_PASSWORD_AUTH\",",
-					"                  \"ClientId\": clientId",
-					"  }),",
-					"options: {",
-					"raw: {",
-					"language: 'json'",
-					"}",
-					"}",
-					"}",
-					"}, function (error, response) {",
-					"console.log(response.json());",
-					"pm.environment.set(\"cognitoAccessToken\", response.json().AuthenticationResult.AccessToken);",
-					"pm.environment.set(\"cognitoIdToken\", response.json().AuthenticationResult.IdToken);",
-					"});"
+					""
 				]
 			}
 		},
