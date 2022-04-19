@@ -1,19 +1,18 @@
+import { RemovalPolicy } from "aws-cdk-lib";
 import {
+  AccessLogField as al,
   AccessLogFormat,
   AuthorizationType,
   CognitoUserPoolsAuthorizer,
   LambdaIntegration,
   LogGroupLogDestination,
-  MethodOptions,
-  RestApi,
-  AccessLogField as al
+  RestApi
 } from "aws-cdk-lib/aws-apigateway";
 import { IFunction } from "aws-cdk-lib/aws-lambda";
-import { Construct } from "constructs";
-import { getBranchName } from "./helper";
-import { Cognito } from "./Cognito";
 import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
-import { RemovalPolicy } from "aws-cdk-lib";
+import { Construct } from "constructs";
+import { Cognito } from "./Cognito";
+import { getBranchName } from "./helper";
 
 export class ApiGateway extends RestApi {
   public static readonly ID = "Apigateway";
@@ -26,11 +25,10 @@ export class ApiGateway extends RestApi {
         accessLogDestination: new LogGroupLogDestination(
           new LogGroup(scope, `${apiName}`, {
             logGroupName: "apiGatewayLogGroup",
-            retention: RetentionDays.ONE_WEEK,
+            retention: RetentionDays.ONE_DAY,
             removalPolicy: RemovalPolicy.DESTROY
           })
         ),
-        metricsEnabled: true,
         accessLogFormat: AccessLogFormat.custom(
           `${al.contextIdentitySourceIp} ${al.contextIdentityCaller()} ${al.contextIdentityUser()} [${
             al.contextRequestTime
