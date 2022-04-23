@@ -13,6 +13,7 @@ export enum Status {
 }
 
 export interface Order {
+  composite_id: string;
   items: Item[];
   code: string;
   status: Status;

@@ -17,21 +17,9 @@ export class OnlineOrderScanSystemStack extends Stack {
     api.addIntegration("GET", "/health", health);
 
     // Create dynamo table
-    const orderSystemTable = new Table(this, "order-system-db", {
+    new Table(this, "order-system-db", {
       partitionKey: { name: "composite_id", type: AttributeType.STRING },
-      sortKey: { name: "sort_key", type: AttributeType.STRING },
       tableName: "order-system-db"
-    });
-    orderSystemTable.addGlobalSecondaryIndex({
-      indexName: "order-system-db-sort_key-composite_id-index",
-      partitionKey: {
-        name: "sort_key",
-        type: AttributeType.STRING
-      },
-      sortKey: {
-        name: "composite_id",
-        type: AttributeType.STRING
-      }
     });
   }
 }
