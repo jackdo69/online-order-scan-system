@@ -1,7 +1,9 @@
 import "source-map-support/register";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { logger } from "../common";
+import { container } from "../containers/ioc.container";
+import { LoggerService } from "../services/logger.service";
 
+const logger: LoggerService = container.get(LoggerService);
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   logger.trace("health lambda executed", event);
 

@@ -1,5 +1,7 @@
+import { injectable } from "inversify";
 import "reflect-metadata";
 
+@injectable()
 export class LoggerService {
   // eslint-disable-next-line @typescript-eslint/ban-types
   private _output: Function;
