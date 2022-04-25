@@ -1,3 +1,4 @@
+import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Architecture, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
@@ -11,6 +12,24 @@ export const createLambda = (scope: Construct, fileName: string): NodejsFunction
     entry: path.join(__dirname, `../../backend/_lambda-handlers/${fileName}.ts`),
     logRetention: RetentionDays.ONE_DAY
   });
+
+  lambda.addToRolePolicy(
+    new PolicyStatement({
+      resources: ["*"],
+      actions: [
+        "dynamodb:GetItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:PutItem",
+        "dynamodb:Scan",
+        "dynamodb:Query",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:BatchGetItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:UpdateItem"
+      ]
+    })
+  );
   return lambda;
 };
 

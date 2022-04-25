@@ -10,8 +10,7 @@ export class BaseRepository {
   protected tableName!: string;
   protected partitionKeyName!: string;
 
-  @inject(LoggerService) protected logger: LoggerService;
-  @inject(DocumentClient) protected documentClient: DocumentClient;
+  constructor(@inject(LoggerService) protected logger: LoggerService, @inject(DocumentClient) protected documentClient: DocumentClient) {}
 
   protected init(tableName: string, partitionKeyName: string): void {
     this.logger.trace("init() called", { tableName, partitionKeyName }, this.constructor.name);
