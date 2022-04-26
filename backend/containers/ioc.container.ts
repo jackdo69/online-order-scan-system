@@ -13,8 +13,10 @@ const container = new Container();
 try {
   const client: DynamoDB.DocumentClient = new DynamoDB.DocumentClient();
 
+  //Common
   container.bind(DynamoDB.DocumentClient).toConstantValue(client);
   container.bind<LoggerService>(LoggerService).to(LoggerService).inSingletonScope();
+  //Order
   container.bind<IOrderController>(ContainerKeys.IOrderController).to(OrderController);
   container.bind<IOrderService>(ContainerKeys.IOrderService).to(OrderService);
   container.bind<IOrderRepository>(ContainerKeys.IOrderRepository).to(OrderRepository);

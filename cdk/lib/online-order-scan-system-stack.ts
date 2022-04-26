@@ -11,12 +11,16 @@ export class OnlineOrderScanSystemStack extends Stack {
     //Create lambdas
     const health = createLambda(this, "health");
     const createOrder = createLambda(this, "createOrder");
+    const updateOrder = createLambda(this, "updateOrder");
+    const getOrder = createLambda(this, "getOrder");
 
     //Create api gateway
     const api = new ApiGateway(this, "apigateway");
 
     api.addIntegration("GET", "/health", health);
     api.addIntegration("POST", "/order", createOrder);
+    api.addIntegration("PUT", "/order/{code}", updateOrder);
+    api.addIntegration("GET", "/order/{code}", getOrder);
 
     // Create dynamo table
     new Table(this, "order-system-db", {

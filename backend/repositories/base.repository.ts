@@ -4,6 +4,7 @@ import { LoggerService } from "../services/logger.service";
 
 type Item = DocumentClient.AttributeMap;
 type PutItemInput = DocumentClient.PutItemInput;
+type GetItemInput = DocumentClient.GetItemInput;
 
 @injectable()
 export class BaseRepository {
@@ -30,5 +31,19 @@ export class BaseRepository {
 
     await this.documentClient.put(params).promise();
     return entity;
+  }
+
+  protected async readEntity<OutputType = object>(partitionKeyValue: string): Promise<OutputType> {
+    this.logger.trace("readEntity() called", { partitionKeyValue }, this.constructor.name);
+
+    const params: GetItemInput = {
+      TableName: this.tableName,
+      Key: {
+        [this.partitionKeyName]: partitionKeyValue
+      }
+    };
+
+    const data = await this.documentClient.get(params).promise();
+    return data?.Item as OutputType;
   }
 }
